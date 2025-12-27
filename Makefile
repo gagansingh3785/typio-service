@@ -1,4 +1,5 @@
 PROJECT_PATH := $(abspath .)
+OUT_FOLDER := $(PROJECT_PATH)/out
 
 TOOLS_DIR := $(abspath ./.tools)
 TOOLS_MOD_DIR := $(abspath ./tools)
@@ -20,4 +21,17 @@ imports: $(TOOLS_DIR)/gci
 
 lint: $(TOOLS_DIR)/golang-lint
 	$(TOOLS_DIR)/golang-lint.exe run --config $(PROJECT_PATH)/.golangci.yaml
+
+
+# The command below are specific to windows command prompt
+# TODO: write a different Makefile for linux
+clean:
+	if exist "$(OUT_FOLDER)" rmdir /S /Q "$(OUT_FOLDER)"
+
+build: clean
+	mkdir "$(OUT_FOLDER)"
+	go build -o $(OUT_FOLDER)/typio-service.exe
+
+start-server: build
+	$(OUT_FOLDER)/typio-service.exe start-server
 

@@ -1,7 +1,58 @@
 package main
 
-import "fmt"
+import (
+	"context"
+	"log"
+	"os"
+
+	cli "github.com/urfave/cli/v3"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	log.Println("[MAIN] Starting typio service...")
+
+	// setup application context
+	err := setupTypingService()
+	if err != nil {
+		log.Fatalf("[MAIN] Failed to setup typing service: %v", err)
+	}
+
+	cliApp := &cli.Command{
+		Name:        "typio-service",
+		Description: "Backend service for typio project",
+		Version:     "1.0.0",
+		Commands: []*cli.Command{
+			{
+				Name:        "start-server",
+				Description: "Start the typio service http server",
+				Usage:       "typing-service start-server",
+				Action: func(c context.Context, cmd *cli.Command) error {
+					log.Println("[MAIN] Starting typio service http server...")
+					return nil
+				},
+			},
+			{
+				Name:        "migrations:run",
+				Description: "Run database migrations",
+				Usage:       "typing-service migrations:run",
+				Action: func(c context.Context, cmd *cli.Command) error {
+					log.Println("[MAIN] Running database migrations...")
+					return nil
+				},
+			},
+			{
+				Name:        "migrations:rollback",
+				Description: "Rollback the last database migration",
+				Usage:       "typing-service migrations:rollback",
+				Action: func(c context.Context, cmd *cli.Command) error {
+					log.Println("[MAIN] Rolling back the last database migration...")
+					return nil
+				},
+			},
+		},
+	}
+	err = cliApp.Run(context.Background(), os.Args)
+	if err != nil {
+		log.Fatalf("[MAIN] Error running typio service: %v", err)
+	}
 }

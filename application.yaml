@@ -1,0 +1,6 @@
+SERVER:
+  PORT: 8080
+  HOST: 0.0.0.0
+
+LOGGER:
+  LEVEL: debug

@@ -91,6 +91,12 @@ linters-settings:
     disable:
       - fieldalignment
 
+  gci:
+    sections:
+        - standard
+        - default
+        - prefix(github.com)
+
   prealloc:
     simple: true
     range-loops: true
