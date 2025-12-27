@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/gagansingh3785/typio-service/utils"
 	"github.com/spf13/viper"
@@ -54,4 +55,8 @@ func (c *Config) Validate() error {
 	}
 
 	return nil
+}
+
+func (c *Config) GetServerAddr() string {
+	return fmt.Sprintf("%s:%s", c.Server.Host, c.Server.Port)
 }

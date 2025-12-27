@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/gagansingh3785/typio-service/server"
 	cli "github.com/urfave/cli/v3"
 )
 
@@ -27,8 +28,7 @@ func main() {
 				Description: "Start the typio service http server",
 				Usage:       "typing-service start-server",
 				Action: func(c context.Context, cmd *cli.Command) error {
-					log.Println("[MAIN] Starting typio service http server...")
-					return nil
+					return server.StartHTTPServer()
 				},
 			},
 			{
