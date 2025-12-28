@@ -12,10 +12,8 @@ import (
 func main() {
 	log.Println("[MAIN] Starting typio service...")
 
-	// setup application context
-	err := setupTypingService()
-	if err != nil {
-		log.Fatalf("[MAIN] Failed to setup typing service: %v", err)
+	if err := setupTypioService(); err != nil {
+		log.Fatalf("[MAIN] Failed to setup typio service: %v", err)
 	}
 
 	cliApp := &cli.Command{
@@ -26,7 +24,7 @@ func main() {
 			{
 				Name:        "start-server",
 				Description: "Start the typio service http server",
-				Usage:       "typing-service start-server",
+				Usage:       "typio-service start-server",
 				Action: func(c context.Context, cmd *cli.Command) error {
 					return server.StartHTTPServer()
 				},
@@ -34,7 +32,7 @@ func main() {
 			{
 				Name:        "migrations:run",
 				Description: "Run database migrations",
-				Usage:       "typing-service migrations:run",
+				Usage:       "typio-service migrations:run",
 				Action: func(c context.Context, cmd *cli.Command) error {
 					log.Println("[MAIN] Running database migrations...")
 					return nil
@@ -43,7 +41,7 @@ func main() {
 			{
 				Name:        "migrations:rollback",
 				Description: "Rollback the last database migration",
-				Usage:       "typing-service migrations:rollback",
+				Usage:       "typio-service migrations:rollback",
 				Action: func(c context.Context, cmd *cli.Command) error {
 					log.Println("[MAIN] Rolling back the last database migration...")
 					return nil
@@ -51,8 +49,8 @@ func main() {
 			},
 		},
 	}
-	err = cliApp.Run(context.Background(), os.Args)
-	if err != nil {
+
+	if err := cliApp.Run(context.Background(), os.Args); err != nil {
 		log.Fatalf("[MAIN] Error running typio service: %v", err)
 	}
 }

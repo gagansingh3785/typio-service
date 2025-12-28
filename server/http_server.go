@@ -22,6 +22,8 @@ func StartHTTPServer() error {
 
 	r := router.NewRouterWithOptions(routerOptions...)
 
+	// TODO: Check Slowloris attack
+	// nolint:gosec
 	s := &http.Server{
 		Addr:    appcontext.GetConfig().GetServerAddr(),
 		Handler: r,
@@ -47,8 +49,8 @@ func StartHTTPServer() error {
 func shutdownServer(s *http.Server) error {
 	zlog.Info().Msg("Shutting down HTTP Server")
 
-	// TODO: Explore if we need to put timeout on
-	// graceful shutdown of server
+	// TODO: Explore if we need to have
+	// timeout on graceful shutdown of server
 	if err := s.Shutdown(context.Background()); err != nil {
 		return err
 	}

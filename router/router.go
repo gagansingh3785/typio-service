@@ -17,7 +17,7 @@ func (f RouterOptionFunc) Apply(router *mux.Router) {
 
 func WithPingRoute() RouterOptionFunc {
 	return func(r *mux.Router) {
-		r.HandleFunc("/ping", handlers.PingHandler)
+		r.HandleFunc("/ping", handlers.PingHandler())
 	}
 }
 

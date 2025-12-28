@@ -6,7 +6,7 @@ import (
 	"github.com/gagansingh3785/typio-service/log"
 )
 
-func setupTypingService() error {
+func setupTypioService() error {
 	// setup configuration
 	cfg, err := config.SetupConfig()
 	if err != nil {
