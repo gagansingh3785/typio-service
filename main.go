@@ -30,6 +30,15 @@ func main() {
 				},
 			},
 			{
+				Name:        "migrations:create",
+				Description: "Create a new database migration",
+				Usage:       "typio-service migrations:create",
+				Action: func(c context.Context, cmd *cli.Command) error {
+					log.Println("[MAIN] Creating database migration...")
+					return nil
+				},
+			},
+			{
 				Name:        "migrations:run",
 				Description: "Run database migrations",
 				Usage:       "typio-service migrations:run",

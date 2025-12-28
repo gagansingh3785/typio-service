@@ -4,6 +4,8 @@ OUT_FOLDER := $(PROJECT_PATH)/out
 TOOLS_DIR := $(abspath ./.tools)
 TOOLS_MOD_DIR := $(abspath ./tools)
 
+############################################### TOOLS ###############################################
+
 $(TOOLS_DIR)/gofumpt: $(TOOLS_MOD_DIR)/go.mod $(TOOLS_MOD_DIR)/go.sum
 	cd $(TOOLS_MOD_DIR) && go build -o $(TOOLS_DIR)/gofumpt.exe mvdan.cc/gofumpt
 
@@ -22,7 +24,23 @@ imports: $(TOOLS_DIR)/gci
 lint: $(TOOLS_DIR)/golang-lint
 	$(TOOLS_DIR)/golang-lint.exe run --config $(PROJECT_PATH)/.golangci.yaml
 
+############################################### DATABASE ###############################################
 
+DB_HOST := localhost
+DB_PORT := 5432
+DB_USER := postgres
+DB_NAME := typio
+# DB_PASSWORD := postgres
+
+drop-db:
+	psql -U $(DB_USER) -h $(DB_HOST) -p $(DB_PORT) -c "DROP DATABASE $(DB_NAME)"
+
+create-db:
+	psql -U $(DB_USER) -h $(DB_HOST) -p $(DB_PORT) -c "CREATE DATABASE $(DB_NAME)"
+
+reset-db: drop-db create-db
+
+############################################### BUILD ###############################################
 # The command below are specific to windows command prompt
 # TODO: write a different Makefile for linux
 clean:
@@ -31,6 +49,9 @@ clean:
 build: clean
 	mkdir "$(OUT_FOLDER)"
 	go build -o $(OUT_FOLDER)/typio-service.exe
+
+test:
+	go test ./...
 
 start-server: build
 	$(OUT_FOLDER)/typio-service.exe start-server

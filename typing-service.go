@@ -17,7 +17,9 @@ func setupTypioService() error {
 	log.SetupLogger(cfg.Logger.Level)
 
 	// setup application context
-	appcontext.Initiate(cfg)
+	if err := appcontext.Initiate(cfg); err != nil {
+		return err
+	}
 
 	return nil
 }

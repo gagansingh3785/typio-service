@@ -11,6 +11,7 @@ import (
 type Config struct {
 	Server ServerConfig `mapstructure:"SERVER"`
 	Logger LoggerConfig `mapstructure:"LOGGER"`
+	DB     DBConfig     `mapstructure:"DB"`
 }
 
 type ServerConfig struct {
@@ -20,6 +21,16 @@ type ServerConfig struct {
 
 type LoggerConfig struct {
 	Level string `mapstructure:"LEVEL"`
+}
+
+type DBConfig struct {
+	// TODO: Add more database configuration to tune
+	// connection performance
+	Host     string `mapstructure:"HOST"`
+	Port     string `mapstructure:"PORT"`
+	User     string `mapstructure:"USER"`
+	Password string `mapstructure:"PASSWORD"`
+	DBName   string `mapstructure:"DB_NAME"`
 }
 
 func SetupConfig() (*Config, error) {
@@ -54,9 +65,33 @@ func (c *Config) Validate() error {
 		return errors.New("server host is required")
 	}
 
+	if utils.IsZero(c.DB.Host) {
+		return errors.New("database host is required")
+	}
+
+	if utils.IsZero(c.DB.Port) {
+		return errors.New("database port is required")
+	}
+
+	if utils.IsZero(c.DB.User) {
+		return errors.New("database user is required")
+	}
+
+	if utils.IsZero(c.DB.Password) {
+		return errors.New("database password is required")
+	}
+
+	if utils.IsZero(c.DB.DBName) {
+		return errors.New("database name is required")
+	}
+
 	return nil
 }
 
 func (c *Config) GetServerAddr() string {
 	return fmt.Sprintf("%s:%s", c.Server.Host, c.Server.Port)
+}
+
+func (c *Config) GetDBURL() string {
+	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", c.DB.Host, c.DB.Port, c.DB.User, c.DB.Password, c.DB.DBName)
 }
