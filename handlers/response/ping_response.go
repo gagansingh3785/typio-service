@@ -4,10 +4,14 @@ import (
 	"net/http"
 )
 
-type PingResponse struct{}
+type PingResponse struct {
+	Response string `json:"response"`
+}
 
 func NewPingResponse() *PingResponse {
-	return &PingResponse{}
+	return &PingResponse{
+		Response: "pong",
+	}
 }
 
 func (resp *PingResponse) GetStatus() int {
