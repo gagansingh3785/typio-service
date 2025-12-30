@@ -2,19 +2,19 @@ package appcontext
 
 import (
 	"github.com/gagansingh3785/typio-service/config"
-	"github.com/jmoiron/sqlx"
+	"github.com/gagansingh3785/typio-service/database"
 )
 
 var AppCtx *AppContext
 
 type AppContext struct {
 	Cfg *config.Config
-	DB  *sqlx.DB
+	DB  *database.Database
 }
 
 func Initiate(cfg *config.Config) error {
 	// setup database
-	db, err := SetupDatabase(cfg)
+	db, err := database.NewDatabase(cfg)
 	if err != nil {
 		return err
 	}
@@ -29,4 +29,8 @@ func Initiate(cfg *config.Config) error {
 
 func GetConfig() *config.Config {
 	return AppCtx.Cfg
+}
+
+func GetDatabase() *database.Database {
+	return AppCtx.DB
 }

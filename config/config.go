@@ -9,9 +9,10 @@ import (
 )
 
 type Config struct {
-	Server ServerConfig `mapstructure:"SERVER"`
-	Logger LoggerConfig `mapstructure:"LOGGER"`
-	DB     DBConfig     `mapstructure:"DB"`
+	Server     ServerConfig     `mapstructure:"SERVER"`
+	Logger     LoggerConfig     `mapstructure:"LOGGER"`
+	DB         DBConfig         `mapstructure:"DB"`
+	Migrations MigrationsConfig `mapstructure:"MIGRATIONS"`
 }
 
 type ServerConfig struct {
@@ -31,6 +32,10 @@ type DBConfig struct {
 	User     string `mapstructure:"USER"`
 	Password string `mapstructure:"PASSWORD"`
 	DBName   string `mapstructure:"DB_NAME"`
+}
+
+type MigrationsConfig struct {
+	Path string `mapstructure:"PATH"`
 }
 
 func SetupConfig() (*Config, error) {
@@ -83,6 +88,10 @@ func (c *Config) Validate() error {
 
 	if utils.IsZero(c.DB.DBName) {
 		return errors.New("database name is required")
+	}
+
+	if utils.IsZero(c.Migrations.Path) {
+		return errors.New("migrations path is required")
 	}
 
 	return nil

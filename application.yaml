@@ -11,3 +11,6 @@ DB:
   USER: postgres
   PASSWORD: postgres
   DB_NAME: typio
+
+MIGRATIONS:
+  PATH: ./migrations
