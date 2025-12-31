@@ -27,23 +27,29 @@ type LoggerConfig struct {
 type DBConfig struct {
 	// TODO: Add more database configuration to tune
 	// connection performance
-	Host     string `mapstructure:"HOST"`
-	Port     string `mapstructure:"PORT"`
-	User     string `mapstructure:"USER"`
-	Password string `mapstructure:"PASSWORD"`
-	DBName   string `mapstructure:"DB_NAME"`
+	Host                     string `mapstructure:"HOST"`
+	Port                     string `mapstructure:"PORT"`
+	User                     string `mapstructure:"USER"`
+	Password                 string `mapstructure:"PASSWORD"`
+	DBName                   string `mapstructure:"DB_NAME"`
+	MaxOpenConnections       int    `mapstructure:"MAX_OPEN_CONNECTIONS"`
+	MaxIdleConnections       int    `mapstructure:"MAX_IDLE_CONNECTIONS"`
+	ConnMaxIdleTimeInSeconds int    `mapstructure:"CONN_MAX_IDLE_TIME_IN_SECONDS"`
+	ConnMaxLifetimeInSeconds int    `mapstructure:"CONN_MAX_LIFETIME_IN_SECONDS"`
 }
 
 type MigrationsConfig struct {
 	Path string `mapstructure:"PATH"`
 }
 
-func SetupConfig() (*Config, error) {
+func SetupConfig(fileName string) (*Config, error) {
 	var config Config
 
-	viper.SetConfigName("application")
+	viper.SetConfigName(fileName)
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./")
+	viper.AddConfigPath("../")
+	viper.AddConfigPath("../../")
 
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, err

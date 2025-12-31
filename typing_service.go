@@ -8,7 +8,7 @@ import (
 
 func setupTypioService() error {
 	// setup configuration
-	cfg, err := config.SetupConfig()
+	cfg, err := config.SetupConfig("application")
 	if err != nil {
 		return err
 	}

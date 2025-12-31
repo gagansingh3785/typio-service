@@ -1,0 +1,1 @@
+DROP SEQUENCE IF EXISTS paragraph_ids_seq;

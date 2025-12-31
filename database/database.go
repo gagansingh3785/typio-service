@@ -29,11 +29,10 @@ func NewDatabase(cfg *config.Config) (*Database, error) {
 		return nil, err
 	}
 
-	// TODO: Add more database configuration to tune
-	// db.SetConnMaxIdleTime()
-	// db.SetConnMaxLifetime()
-	// db.SetMaxIdleConns()
-	// db.SetMaxOpenConns()
+	db.SetMaxOpenConns(cfg.DB.MaxOpenConnections)
+	db.SetMaxIdleConns(cfg.DB.MaxIdleConnections)
+	db.SetConnMaxIdleTime(time.Duration(cfg.DB.ConnMaxIdleTimeInSeconds) * time.Second)
+	db.SetConnMaxLifetime(time.Duration(cfg.DB.ConnMaxLifetimeInSeconds) * time.Second)
 
 	return &Database{DB: db}, nil
 }
