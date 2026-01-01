@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gagansingh3785/typio-service/handlers"
+	"github.com/gagansingh3785/typio-service/registry"
 	"github.com/gorilla/mux"
 )
 
@@ -18,6 +19,12 @@ func (f RouterOptionFunc) Apply(router *mux.Router) {
 func WithPingRoute() RouterOptionFunc {
 	return func(r *mux.Router) {
 		r.HandleFunc("/ping", handlers.PingHandler())
+	}
+}
+
+func WithExternalRoutes(svcRegistry *registry.ServiceRegistry) RouterOptionFunc {
+	return func(r *mux.Router) {
+		r.HandleFunc("/v1/paragraphs", handlers.ParagraphsV1Handler(svcRegistry))
 	}
 }
 

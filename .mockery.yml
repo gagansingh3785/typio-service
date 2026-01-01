@@ -1,0 +1,19 @@
+dir: "{{.InterfaceDir}}/mocks"
+filename: "mock_{{.InterfaceName | snakecase}}.go"
+formatter: goimports
+log-level: info
+structname: "{{.InterfaceName}}"
+pkgname: mocks
+template: testify
+packages:
+  github.com/gagansingh3785/typio-service/services:
+    interfaces:
+      ParagraphService:
+  github.com/gagansingh3785/typio-service/repository:
+    interfaces:
+      Repository:
+      BaseRepository:
+      TxRunner:
+  github.com/gagansingh3785/typio-service/builders:
+    interfaces:
+      ParagraphsBuilder:

@@ -15,6 +15,11 @@ $(TOOLS_DIR)/gci: $(TOOLS_MOD_DIR)/go.mod $(TOOLS_MOD_DIR)/go.sum
 $(TOOLS_DIR)/golang-lint: $(TOOLS_MOD_DIR)/go.mod $(TOOLS_MOD_DIR)/go.sum
 	cd $(TOOLS_MOD_DIR) && go build -o $(TOOLS_DIR)/golang-lint.exe github.com/golangci/golangci-lint/v2/cmd/golangci-lint
 
+$(TOOLS_DIR)/mockery: $(TOOLS_MOD_DIR)/go.mod $(TOOLS_MOD_DIR)/go.sum
+	cd $(TOOLS_MOD_DIR) && go build -o $(TOOLS_DIR)/mockery.exe github.com/vektra/mockery/v3
+
+############################################### FORMAT ###############################################
+
 fumpt: $(TOOLS_DIR)/gofumpt
 	$(TOOLS_DIR)/gofumpt.exe -w .
 
@@ -23,6 +28,15 @@ imports: $(TOOLS_DIR)/gci
 
 lint: $(TOOLS_DIR)/golang-lint
 	$(TOOLS_DIR)/golang-lint.exe run --config $(PROJECT_PATH)/.golangci.yaml
+
+############################################### GENERATE ###############################################
+
+mockery-init: $(TOOLS_DIR)/mockery
+	$(TOOLS_DIR)/mockery.exe init github.com/gagansingh3785/typio-service/...
+
+
+generate-mocks: $(TOOLS_DIR)/mockery
+	$(TOOLS_DIR)/mockery.exe --config $(PROJECT_PATH)/.mockery.yml
 
 ############################################### DATABASE ###############################################
 

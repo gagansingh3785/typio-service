@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gagansingh3785/typio-service/appcontext"
+	"github.com/gagansingh3785/typio-service/registry"
 	"github.com/gagansingh3785/typio-service/router"
 	zlog "github.com/rs/zerolog/log"
 )
@@ -13,12 +14,19 @@ import (
 func StartHTTPServer() error {
 	zlog.Info().Msg("Starting HTTP Server")
 
-	routerOptions := []router.RouterOption{
-		router.WithPingRoute(),
-	}
-
 	sigCtx, cancelFunc := NewSignalContext()
 	defer cancelFunc()
+
+	serviceRegistry := registry.NewServiceRegistry(
+		registry.NewBuilderRegistry(
+			registry.NewRepositoryRegistry(appcontext.GetDatabase()),
+		),
+	)
+
+	routerOptions := []router.RouterOption{
+		router.WithPingRoute(),
+		router.WithExternalRoutes(serviceRegistry),
+	}
 
 	r := router.NewRouterWithOptions(routerOptions...)
 

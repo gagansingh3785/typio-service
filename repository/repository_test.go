@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"testing"
 	"time"
 
@@ -84,4 +85,12 @@ func (s *RepositoryTestSuite) TestGetRandomParagraph() {
 	assert.NoError(s.T(), err)
 	assert.NotNil(s.T(), paragraph)
 	assert.Contains(s.T(), s.paragraphs, *paragraph)
+}
+
+func (s *RepositoryTestSuite) TestGetRandomParagraphNoParagraphs() {
+	_, err := s.db.DB.Exec("DELETE FROM paragraphs")
+	assert.NoError(s.T(), err)
+	paragraph, err := s.repository.GetRandomParagraph(s.ctx)
+	assert.Equal(s.T(), sql.ErrNoRows, err)
+	assert.Nil(s.T(), paragraph)
 }

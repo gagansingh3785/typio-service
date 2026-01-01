@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"crypto/rand"
+	"database/sql"
 	"math/big"
 
 	"github.com/gagansingh3785/typio-service/database"
@@ -30,9 +31,13 @@ func NewRepository(db *database.Database) Repository {
 func (r *repo) GetRandomParagraph(ctx context.Context) (*domain.Paragraph, error) {
 	paragraph := &domain.Paragraph{}
 	paragraphCount := 0
-	err := r.txRunner.RunInTxContext(ctx, func(tx *sqlx.Tx) error {
+	if err := r.txRunner.RunInTxContext(ctx, func(tx *sqlx.Tx) error {
 		if err := r.baseRepository.NamedGetRow(ctx, tx, GetParagraphsCountQuery, &paragraphCount, map[string]interface{}{}); err != nil {
 			return err
+		}
+
+		if paragraphCount == 0 {
+			return sql.ErrNoRows
 		}
 
 		randomIndex, err := rand.Int(rand.Reader, big.NewInt(int64(paragraphCount)))
@@ -48,8 +53,7 @@ func (r *repo) GetRandomParagraph(ctx context.Context) (*domain.Paragraph, error
 		}
 
 		return nil
-	})
-	if err != nil {
+	}); err != nil {
 		return nil, err
 	}
 

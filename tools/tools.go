@@ -8,4 +8,5 @@ import (
 
 	_ "github.com/daixiang0/gci/cmd/gci"
 	_ "github.com/golangci/golangci-lint/v2/cmd/golangci-lint"
+	_ "github.com/vektra/mockery/v3/internal/cmd"
 )

@@ -13,15 +13,15 @@ import (
 )
 
 type (
-	requestProcessor  func(ctx context.Context, r *http.Request) (request.RequestType, error)
-	domainProcessor   func(ctx context.Context, request request.RequestType) (any, error)
-	responseProcessor func(ctx context.Context, domainObj any) response.ResponseType
+	requestProcessor[T request.RequestType]           func(ctx context.Context, r *http.Request) (T, error)
+	domainProcessor[T request.RequestType, D any]     func(ctx context.Context, request T) (D, error)
+	responseProcessor[R response.ResponseType, D any] func(ctx context.Context, domainObj D) R
 )
 
-func Handler(
-	reqProcessor requestProcessor,
-	domainProcessor domainProcessor,
-	respProcessor responseProcessor,
+func Handler[T request.RequestType, D any, R response.ResponseType](
+	reqProcessor requestProcessor[T],
+	domainProcessor domainProcessor[T, D],
+	respProcessor responseProcessor[R, D],
 ) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		resp, err := process(r, reqProcessor, domainProcessor, respProcessor)
@@ -34,25 +34,26 @@ func Handler(
 	}
 }
 
-func process(
+func process[T request.RequestType, D any, R response.ResponseType](
 	r *http.Request,
-	reqProcessor requestProcessor,
-	domainProcessor domainProcessor,
-	respProcessor responseProcessor,
-) (response.ResponseType, errors.ServiceError) {
+	reqProcessor requestProcessor[T],
+	domainProcessor domainProcessor[T, D],
+	respProcessor responseProcessor[R, D],
+) (R, errors.ServiceError) {
+	var zeroResp R
 	ctx := r.Context()
 	processedReq, err := reqProcessor(ctx, r)
 	if err != nil {
-		return nil, errors.As4xxError(err)
+		return zeroResp, errors.As4xxError(err)
 	}
 
 	if err := processedReq.Validate(); err != nil {
-		return nil, errors.As4xxError(err)
+		return zeroResp, errors.As4xxError(err)
 	}
 
 	domainObj, err := domainProcessor(ctx, processedReq)
 	if err != nil {
-		return nil, errors.AsServiceError(err)
+		return zeroResp, errors.AsServiceError(err)
 	}
 
 	resp := respProcessor(ctx, domainObj)

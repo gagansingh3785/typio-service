@@ -5,7 +5,11 @@ import (
 	"net/http"
 )
 
-var GenericBadRequestError = NewServiceError(errors.New("bad request"), "BAD_REQUEST", http.StatusBadRequest, "bad request")
+var (
+	GenericBadRequestError = NewServiceError(errors.New("bad request"), "BAD_REQUEST", http.StatusBadRequest, "bad request")
+
+	NoParagraphsFoundError = NewServiceError(errors.New("no paragraphs found"), "NO_PARAGRAPHS_FOUND", http.StatusNotFound, "no paragraphs found")
+)
 
 func As4xxError(err error) ServiceError {
 	var svcError *serviceError

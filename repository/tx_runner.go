@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+	zlog "github.com/rs/zerolog/log"
 )
 
 type TxRunner interface {
@@ -32,7 +33,7 @@ func (r *txRunner) RunInTxContext(ctx context.Context, fn func(*sqlx.Tx) error) 
 	// stop panic of program
 	defer func() {
 		if ret := recover(); ret != nil {
-			// there was a panic, need to roll back the transaction
+			zlog.Err(errors.New(fmt.Sprint(ret))).Msg("panic in transaction")
 			_ = tx.Rollback()
 			err = errors.New(fmt.Sprint(ret))
 		}
